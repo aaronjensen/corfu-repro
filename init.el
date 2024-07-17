@@ -51,7 +51,13 @@
   (setq corfu-quit-no-match 'separator
         corfu-preselect 'prompt)
 
-  (global-corfu-mode))
+  (global-corfu-mode)
+
+  (setq debug-on-error t)
+  (defadvice corfu--post-command (around intercept activate)
+    (condition-case err
+        ad-do-it
+      ((debug error) (signal (car err) (cdr err))))))
 
 (use-package corfu-prescient
   :after corfu
